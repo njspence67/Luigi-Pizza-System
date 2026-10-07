@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Staff | Hungry Hippo Pizzas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="topbar">
+        <div class="wrap topbar-inner">
+            <a class="brand" href="staff.html"><span class="brand-name">Hungry Hippo</span><span class="brand-sub">Staff</span></a>
+            <div id="divWho" style="display:flex; align-items:center; gap:.75rem"></div>
+        </div>
+        <nav class="wrap tabs" id="navStaff" aria-label="Staff" hidden>
+            <button type="button" class="tab" data-view="kitchen" aria-current="page">Kitchen</button>
+            <button type="button" class="tab" data-view="clock">Time clock</button>
+            <button type="button" class="tab" data-view="schedule">Schedule</button>
+            <button type="button" class="tab" data-view="inventory">Inventory</button>
+            <button type="button" class="tab" data-view="recipes">Recipes</button>
+            <button type="button" class="tab" data-view="reports" data-manager>Reports</button>
+        </nav>
+    </header>
+
+    <main id="main" class="wrap" tabindex="-1" style="padding-top:1rem">
+
+        <!-- Sign in -->
+        <section id="viewLogin" class="view">
+            <div class="panel narrow" style="text-align:center">
+                <h1 style="font-size:2.4rem">Staff sign in</h1>
+                <p>Enter your 4-digit PIN.</p>
+                <div class="pin-dots" id="divPinDots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                <label for="txtPin" class="sr-only">PIN</label>
+                <input type="password" id="txtPin" inputmode="numeric" maxlength="4" autocomplete="off" style="max-width:320px; margin:0 auto; text-align:center; font-size:1.5rem">
+                <div class="pin-pad" id="divPinPad"></div>
+                <p class="hint">Demo PINs: Luigi (manager) 1234. Ava, prep/cook staff, 1111.</p>
+                <p><a href="index.html">Back to the customer site</a></p>
+            </div>
+        </section>
+
+        <section id="viewKitchen" class="view" hidden aria-labelledby="hKitchen">
+            <h1 id="hKitchen" class="sr-only">Kitchen</h1>
+            <div class="kitchen-stats" id="divKitchenStats"></div>
+            <div class="section-head">
+                <h2>Orders to make</h2>
+                <div style="display:flex; gap:.5rem; flex-wrap:wrap">
+                    <button type="button" class="btn btn-secondary btn-small" id="btnUndo" disabled>Undo last bump</button>
+                </div>
+            </div>
+            <p class="hint no-print">Tap Bump to move an order to the next step, or press the number key shown on the ticket.</p>
+            <div class="tickets" id="divTickets"></div>
+            <div class="section-head"><h2>Waiting for pickup or serving</h2></div>
+            <div class="tickets" id="divReady"></div>
+            <div class="section-head"><h2>Scheduled for later</h2></div>
+            <div class="tickets" id="divLater"></div>
+        </section>
+
+        <section id="viewClock" class="view" hidden aria-labelledby="hClock">
+            <div class="panel narrow" id="divClock"></div>
+            <div class="panel narrow">
+                <h2>On the clock now</h2>
+                <div id="divOnClock"></div>
+            </div>
+        </section>
+
+        <section id="viewSchedule" class="view" hidden aria-labelledby="hSchedule">
+            <div class="section-head">
+                <h1 id="hSchedule" style="margin:0">Schedule</h1>
+                <div style="display:flex; gap:.5rem">
+                    <button type="button" class="btn btn-secondary btn-small" id="btnWeekPrev">Previous week</button>
+                    <button type="button" class="btn btn-secondary btn-small" id="btnWeekThis">This week</button>
+                    <button type="button" class="btn btn-secondary btn-small" id="btnWeekNext">Next week</button>
+                </div>
+            </div>
+            <div id="divWeekSummary"></div>
+            <div class="panel" id="divAddShift" data-manager></div>
+            <div id="divSchedule"></div>
+        </section>
+
+        <section id="viewInventory" class="view" hidden aria-labelledby="hInventory">
+            <h1 id="hInventory">Inventory</h1>
+            <div id="divLowStock"></div>
+            <div class="panel"><div class="table-wrap" id="divInventory"></div></div>
+            <div class="panel">
+                <h2>What each item costs us</h2>
+                <p class="lede">Ingredient cost from the prices above, compared to what we charge. Pickup orders include the box.</p>
+                <div class="table-wrap" id="divMargins"></div>
+            </div>
+        </section>
+
+        <section id="viewRecipes" class="view" hidden aria-labelledby="hRecipes">
+            <h1 id="hRecipes">Recipes and build guide</h1>
+            <div id="divRecipes"></div>
+        </section>
+
+        <section id="viewReports" class="view" hidden aria-labelledby="hReports">
+            <div class="section-head">
+                <h1 id="hReports" style="margin:0">Reports</h1>
+                <div class="field" style="margin:0; min-width:220px">
+                    <label for="selRange" class="sr-only">Time period</label>
+                    <select id="selRange">
+                        <option value="7">Last 7 days</option>
+                        <option value="14">Last 14 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                    </select>
+                </div>
+            </div>
+            <p class="hint">Full days only, not counting today. Profit here is sales minus ingredients and hourly labor. It does not include rent, utilities, or Luigi's pay.</p>
+            <div class="kpis" id="divKpis"></div>
+            <div id="divMoneyNotes"></div>
+            <div class="report-grid">
+                <div class="panel"><h2>Money in and out by day</h2><div class="chart-box"><canvas id="chartDaily" aria-label="Sales, costs, and profit by day" role="img"></canvas></div></div>
+                <div class="panel"><h2>Average profit by hour</h2><div class="chart-box"><canvas id="chartHourly" aria-label="Average profit or loss for each hour of the day" role="img"></canvas></div></div>
+                <div class="panel"><h2>Orders by day of the week</h2><div class="chart-box"><canvas id="chartWeekday" aria-label="Average orders for each day of the week" role="img"></canvas></div></div>
+                <div class="panel"><h2>Most popular toppings</h2><div class="chart-box"><canvas id="chartToppings" aria-label="Toppings ordered most often" role="img"></canvas></div></div>
+            </div>
+            <div class="panel">
+                <h2>Forecast: next 7 days</h2>
+                <p class="lede">Expected orders per hour, based on the same day and hour over the last 4 weeks (recent weeks count more).</p>
+                <div class="table-wrap" id="divForecast"></div>
+                <div id="divForecastNotes"></div>
+            </div>
+            <div class="panel">
+                <h2>Demo settings</h2>
+                <label class="check" style="margin-bottom:1rem"><input type="checkbox" id="chkAlwaysOpen"><span>Take "as soon as possible" orders outside business hours (for testing at night)</span></label>
+                <button type="button" class="btn btn-secondary" id="btnResetDemo">Reset all demo data</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/staff.js"></script>
+</body>
+</html>
