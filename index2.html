@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f5ed">
+  <meta name="description" content="A mobile-first ordering demo for Luigi's Pizzeria.">
+  <title>Luigi's Pizzeria | Order Demo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="Luigi's Pizzeria home">
+        <span class="brand-mark" aria-hidden="true">L</span>
+        <span class="brand-copy"><strong>LUIGI'S</strong><span>PIZZERIA</span></span>
+      </a>
+      <div class="header-meta">
+        <span class="open-indicator"><span aria-hidden="true"></span> Open daily</span>
+        <span class="hours">10:00 AM – 11:00 PM</span>
+      </div>
+      <span class="demo-pill">DEMO · NO PAYMENT</span>
+    </div>
+    <nav class="primary-nav" aria-label="Demo sections">
+      <div class="nav-inner">
+        <button class="nav-button is-active" type="button" data-view="orderView" aria-current="page">Order</button>
+        <button class="nav-button" type="button" data-view="trackingView">Track order</button>
+        <button class="nav-button" type="button" data-view="kitchenView">Kitchen</button>
+        <button class="nav-button" type="button" data-view="managerView">Manager</button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="mainContent" class="page-shell" tabindex="-1">
+    <section id="orderView" class="app-view is-visible" aria-labelledby="orderHeading">
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">MADE FRESH, YOUR WAY</p>
+          <h1 id="orderHeading">Build your pizza</h1>
+          <p class="lead-copy">Choose dine-in or pickup, make it yours, and add a drink.</p>
+        </div>
+        <div class="mini-note"><span class="note-icon" aria-hidden="true">i</span><span>Homemade New York style<br>One size of crust: New York</span></div>
+      </div>
+
+      <div id="builderStage" class="order-layout">
+        <div class="builder-column">
+          <section class="panel" aria-labelledby="serviceHeading">
+            <div class="section-title-row">
+              <div><p class="step-label">STEP 1</p><h2 id="serviceHeading">How would you like to enjoy it?</h2></div>
+            </div>
+            <fieldset class="choice-row">
+              <legend class="visually-hidden">Choose dine-in or pickup</legend>
+              <label class="choice-card">
+                <input type="radio" name="fulfillment" value="Dine-in" checked>
+                <span class="choice-icon" aria-hidden="true">⌂</span><span><strong>Dine-in</strong><small>Enjoy it here</small></span>
+              </label>
+              <label class="choice-card">
+                <input type="radio" name="fulfillment" value="Pickup">
+                <span class="choice-icon" aria-hidden="true">↗</span><span><strong>Pickup</strong><small>Pick it up in store</small></span>
+              </label>
+            </fieldset>
+          </section>
+
+          <section class="panel" aria-labelledby="pizzaHeading">
+            <div class="section-title-row">
+              <div><p class="step-label">STEP 2</p><h2 id="pizzaHeading">Choose your pizza</h2></div>
+              <span class="tag tag-olive">NEW YORK CRUST</span>
+            </div>
+            <fieldset>
+              <legend class="field-heading">Size <span class="muted">· pick one</span></legend>
+              <div class="size-grid">
+                <label class="size-card"><input type="radio" name="pizzaSize" value="Small" data-inches="12" data-price="5"><span class="size-inch">12&quot;</span><span class="size-name">Small</span><span class="size-price">$5</span></label>
+                <label class="size-card is-selected"><input type="radio" name="pizzaSize" value="Medium" data-inches="14" data-price="7" checked><span class="size-inch">14&quot;</span><span class="size-name">Medium</span><span class="size-price">$7</span></label>
+                <label class="size-card"><input type="radio" name="pizzaSize" value="Large" data-inches="18" data-price="9"><span class="size-inch">18&quot;</span><span class="size-name">Large</span><span class="size-price">$9</span></label>
+              </div>
+            </fieldset>
+            <fieldset class="toppings-fieldset">
+              <legend class="field-heading">Toppings <span class="muted">· choose at least one</span></legend>
+              <p id="toppingPriceHint" class="helper-copy">Base price includes sauce, cheese, and one topping. Each extra topping is $2 for a medium.</p>
+              <div class="topping-grid">
+                <label class="topping-option"><input type="checkbox" name="topping" value="Pepperoni"><span>Pepperoni</span></label>
+                <label class="topping-option"><input type="checkbox" name="topping" value="Sausage"><span>Sausage</span></label>
+                <label class="topping-option"><input type="checkbox" name="topping" value="Beef"><span>Beef</span></label>
+                <label class="topping-option"><input type="checkbox" name="topping" value="Green pepper"><span>Green pepper</span></label>
+                <label class="topping-option"><input type="checkbox" name="topping" value="Jalapeños"><span>Jalapeños</span></label>
+                <label class="topping-option"><input type="checkbox" name="topping" value="Pineapple"><span>Pineapple</span></label>
+                <label class="topping-option"><input type="checkbox" name="topping" value="Onion"><span>Onion</span></label>
+                <label class="topping-option"><input type="checkbox" name="topping" value="Black olives"><span>Black olives</span></label>
+                <label class="topping-option"><input type="checkbox" name="topping" value="Diced tomatoes"><span>Diced tomatoes</span></label>
+              </div>
+            </fieldset>
+            <div class="pizza-action-row">
+              <p id="pizzaPricePreview" class="price-preview" aria-live="polite">Pizza subtotal: $7</p>
+              <button id="btnAddPizza" class="button button-primary" type="button">Add pizza to cart <span aria-hidden="true">→</span></button>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="drinksHeading">
+            <div class="section-title-row">
+              <div><p class="step-label">STEP 3</p><h2 id="drinksHeading">Something to drink?</h2></div>
+            </div>
+            <p class="helper-copy">Drink names and sizes are demo labels. Add any that sound good.</p>
+            <div class="drink-grid">
+              <article class="drink-card"><span class="drink-art tea" aria-hidden="true">T</span><div class="drink-info"><h3>Iced tea</h3><label class="visually-hidden" for="drinkSizeTea">Iced tea size</label><select id="drinkSizeTea" class="drink-size"><option value="Small">Small · $1</option><option value="Medium">Medium · $2</option><option value="Large">Large · $3</option></select></div><button class="button button-outline btnAddDrink" type="button" data-drink="Iced tea" aria-label="Add iced tea to cart">Add</button></article>
+              <article class="drink-card"><span class="drink-art cola" aria-hidden="true">Q</span><div class="drink-info"><h3>Dr Q</h3><label class="visually-hidden" for="drinkSizeDrQ">Dr Q size</label><select id="drinkSizeDrQ" class="drink-size"><option value="Small">Small · $1</option><option value="Medium">Medium · $2</option><option value="Large">Large · $3</option></select></div><button class="button button-outline btnAddDrink" type="button" data-drink="Dr Q" aria-label="Add Dr Q to cart">Add</button></article>
+              <article class="drink-card"><span class="drink-art cola" aria-hidden="true">C</span><div class="drink-info"><h3>Coke</h3><label class="visually-hidden" for="drinkSizeCoke">Coke size</label><select id="drinkSizeCoke" class="drink-size"><option value="Small">Small · $1</option><option value="Medium">Medium · $2</option><option value="Large">Large · $3</option></select></div><button class="button button-outline btnAddDrink" type="button" data-drink="Coke" aria-label="Add Coke to cart">Add</button></article>
+              <article class="drink-card"><span class="drink-art cola" aria-hidden="true">D</span><div class="drink-info"><h3>DC</h3><label class="visually-hidden" for="drinkSizeDC">DC size</label><select id="drinkSizeDC" class="drink-size"><option value="Small">Small · $1</option><option value="Medium">Medium · $2</option><option value="Large">Large · $3</option></select></div><button class="button button-outline btnAddDrink" type="button" data-drink="DC" aria-label="Add DC to cart">Add</button></article>
+            </div>
+          </section>
+        </div>
+
+        <aside id="cartPanel" class="cart-panel" aria-labelledby="cartHeading">
+          <div class="cart-heading"><div><p class="step-label">YOUR ORDER</p><h2 id="cartHeading">Cart <span id="cartCount" class="cart-count">0</span></h2></div><span class="cart-bag" aria-hidden="true">▱</span></div>
+          <div id="cartItems" class="cart-items" aria-live="polite"><p class="empty-cart">Your cart is waiting for something delicious.</p></div>
+          <div class="cart-total-row"><span>Subtotal</span><strong id="cartSubtotal">$0</strong></div>
+          <p class="fine-print">Tax is not calculated in this demo.</p>
+          <button id="btnCheckout" class="button button-primary button-wide" type="button" disabled>Continue to checkout</button>
+          <button id="btnClearCart" class="text-button" type="button" disabled>Clear cart</button>
+          <div class="cart-safety"><span aria-hidden="true">✓</span><span>Demo checkout only<br><strong>No card details or payment collected</strong></span></div>
+        </aside>
+      </div>
+
+      <section id="checkoutStage" class="panel checkout-panel" aria-labelledby="checkoutHeading" hidden>
+        <div class="checkout-intro"><p class="eyebrow">ALMOST THERE</p><h2 id="checkoutHeading">Review your order</h2><p>Checkout is simulated. No money will be charged and no card information is requested.</p></div>
+        <div class="checkout-grid">
+          <div>
+            <div id="checkoutSummary" class="checkout-summary"></div>
+            <div class="mock-payment-note"><span class="mock-payment-icon" aria-hidden="true">✓</span><div><strong>Mock payment</strong><p>This free demo does not connect to a payment service.</p></div></div>
+          </div>
+          <form id="checkoutForm" novalidate>
+            <h3>Order contact</h3>
+            <label class="form-label" for="txtCustomerName">Your name <span class="required-label">Required</span></label>
+            <input class="form-control" id="txtCustomerName" name="customerName" autocomplete="name" aria-describedby="checkoutError" required>
+            <label class="form-label" for="txtCustomerPhone">Phone number <span class="required-label">Required</span></label>
+            <input class="form-control" id="txtCustomerPhone" name="customerPhone" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="checkoutError" required>
+            <label class="form-label" for="txtCustomerEmail">Email <span class="muted">Optional</span></label>
+            <input class="form-control" id="txtCustomerEmail" name="customerEmail" type="email" autocomplete="email" inputmode="email" aria-describedby="checkoutError">
+            <div id="tableNumberWrap" hidden><label class="form-label" for="txtTableNumber">Table number <span class="muted">Optional</span></label><input class="form-control" id="txtTableNumber" name="tableNumber" inputmode="numeric"></div>
+            <p class="privacy-note">Demo contact and order details are saved only in this browser.</p>
+            <p id="checkoutError" class="form-error" role="alert" hidden></p>
+            <div class="checkout-actions"><button id="btnBackToOrder" class="button button-secondary" type="button">Back to order</button><button id="btnPlaceOrder" class="button button-primary" type="submit">Place demo order</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section class="customer-extras" aria-label="Customer information">
+        <article class="loyalty-card"><div class="loyalty-star" aria-hidden="true">✦</div><div><p class="step-label">LUIGI'S REWARDS · DEMO</p><h2>Good food, good company.</h2><p>Loyalty points and accounts are shown as a preview. This demo does not create accounts or save passwords.</p></div><div class="points-pill"><strong id="loyaltyPoints">0</strong><span>sample points</span></div></article>
+        <section class="history-card" aria-labelledby="historyHeading"><div class="section-title-row"><div><p class="step-label">DEMO HISTORY</p><h2 id="historyHeading">Recent orders</h2></div><span class="tag">SAMPLE DATA</span></div><div id="customerHistory" class="history-list"></div></section>
+      </section>
+    </section>
+
+    <section id="trackingView" class="app-view" aria-labelledby="trackingHeading" hidden>
+      <div class="page-heading"><div><p class="eyebrow">YOUR ORDER, AT A GLANCE</p><h1 id="trackingHeading">Order tracker</h1><p class="lead-copy">Follow a sample ticket or the demo order you just placed.</p></div><span class="tag tag-olive">LOCAL DEMO</span></div>
+      <section class="panel tracker-panel">
+        <div class="tracker-topline"><div><p class="step-label">SELECT AN ORDER</p><label class="visually-hidden" for="orderSelect">Choose an order to track</label><select id="orderSelect" class="form-select tracker-select"></select></div><span id="trackerStatus" class="status-badge">Received</span></div>
+        <div id="trackerContent" class="tracker-content"></div>
+      </section>
+      <p class="privacy-note">Sample and demo orders are saved only in this browser. No account or server is connected.</p>
+    </section>
+
+    <section id="kitchenView" class="app-view" aria-labelledby="kitchenHeading" hidden>
+      <div class="page-heading"><div><p class="eyebrow">STAFF VIEW · DEMO TICKETS</p><h1 id="kitchenHeading">Kitchen queue</h1><p class="lead-copy">Advance tickets through the sample prep flow.</p></div><div class="queue-count"><strong id="queueCount">0</strong><span>active tickets</span></div></div>
+      <div class="kitchen-toolbar"><span class="tag tag-red">BUMP BAR PREVIEW</span><span class="fine-print">Changes stay in this browser.</span></div>
+      <div id="kitchenQueue" class="kitchen-grid"></div>
+    </section>
+
+    <section id="managerView" class="app-view" aria-labelledby="managerHeading" hidden>
+      <div class="page-heading"><div><p class="eyebrow">OWNER VIEW · SEE THE SHAPE OF THE DAY</p><h1 id="managerHeading">Manager dashboard</h1><p class="lead-copy">Example trends for a quick look at what the full system could show.</p></div><span class="tag tag-olive">SEEDED SAMPLE DATA</span></div>
+      <div class="metric-grid" aria-label="Sample business metrics">
+        <article class="metric-card"><span>Orders today</span><strong>46</strong><small class="positive">+8% from last week</small></article>
+        <article class="metric-card"><span>Sample sales</span><strong>$684</strong><small>Illustrative only</small></article>
+        <article class="metric-card"><span>Avg. ticket time</span><strong>22 min</strong><small>Sample orders</small></article>
+      </div>
+      <div class="chart-grid">
+        <section class="panel chart-panel"><div class="section-title-row"><div><p class="step-label">SAMPLE SALES</p><h2>Orders by hour</h2></div><span class="chart-unit">Orders</span></div><div id="hourChart" class="bar-chart" role="img" aria-label="Sample order volume by hour"></div><p class="chart-caption">Example counts, not connected to real sales.</p></section>
+        <section class="panel chart-panel"><div class="section-title-row"><div><p class="step-label">SAMPLE WEEK</p><h2>Orders by day</h2></div><span class="chart-unit">Orders</span></div><div id="dayChart" class="bar-chart day-chart" role="img" aria-label="Sample orders by weekday"></div><p class="chart-caption">Example counts, not connected to real sales.</p></section>
+        <section class="panel chart-panel chart-panel-wide"><div class="section-title-row"><div><p class="step-label">SAMPLE MENU MIX</p><h2>Popular choices</h2></div><span class="chart-unit">Share of sample pizzas</span></div><div id="menuChart" class="menu-bars" role="img" aria-label="Sample popular pizza sizes and toppings"></div><p class="chart-caption">Seeded demo data only. Ingredient and labor costs are not connected.</p></section>
+      </div>
+      <div class="manager-note"><span aria-hidden="true">i</span><p>Inventory, costs, staffing, and forecasting require real recipe, wage, stock, and order data in a later phase. This free prototype uses no paid services.</p></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-inner"><span>Luigi's Pizzeria · Ordering system prototype</span><span>Demo data only · No real payment</span></div></footer>
+</body>
+</html>
