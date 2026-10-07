@@ -1,12 +1,338 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=index2.html">
-  <title>Luigi's Pizzeria demo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hungry Hippo Pizzas | Custom pizza for pickup or dine in</title>
+    <meta name="description" content="Custom New York style pizza made from scratch. Order ahead for pickup or dine in. Open 10 AM to 11 PM every day.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <p><a href="index2.html">Open the Luigi's Pizzeria demo</a></p>
+<body class="site">
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <!-- Utility bar: open status and text size -->
+    <div class="util-bar">
+        <div class="wrap util-inner">
+            <div id="divHours" role="status"></div>
+            <div class="text-size light" role="group" aria-label="Text size">
+                <span class="util-label" aria-hidden="true">Text size</span>
+                <button type="button" class="ts-btn" data-size="" aria-pressed="true" aria-label="Normal text">A</button>
+                <button type="button" class="ts-btn" data-size="text-lg" aria-pressed="false" aria-label="Larger text">A+</button>
+                <button type="button" class="ts-btn" data-size="text-xl" aria-pressed="false" aria-label="Largest text">A++</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main header -->
+    <header class="site-header">
+        <div class="wrap site-header-inner">
+            <nav class="main-nav" aria-label="Main">
+                <button type="button" class="nav-link" data-view="order">Order now</button>
+                <button type="button" class="nav-link" data-view="home" data-scroll="#hMenu">Menu</button>
+                <button type="button" class="nav-link" data-view="rewards">Rewards</button>
+                <button type="button" class="nav-link" data-view="track">Tracker</button>
+            </nav>
+            <button type="button" class="logo" data-view="home" aria-label="Hungry Hippo Pizzas, home">
+                <span class="logo-top">Hungry Hippo</span>
+                <span class="logo-bottom">Pizzas</span>
+            </button>
+            <div class="header-actions">
+                <button type="button" class="pill pill-outline-light hide-narrow" id="btnHeaderSignIn">Sign in</button>
+                <button type="button" class="pill pill-light" id="btnHeaderCart" aria-label="Your order, 0 items">
+                    <span>Order</span><span class="cart-count" id="lblCartCount" aria-hidden="true">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main" class="wrap" tabindex="-1">
+
+        <!-- ================= HOME ================= -->
+        <section id="viewHome" class="view" aria-labelledby="hStart">
+            <div class="start-bar">
+                <h1 id="hStart" class="start-title">Start your order</h1>
+                <div class="start-actions">
+                    <button type="button" class="pill pill-red pill-lg" data-start="pickup">Pickup</button>
+                    <span class="start-or">or</span>
+                    <button type="button" class="pill pill-red pill-lg" data-start="dinein">Dine in</button>
+                </div>
+            </div>
+
+            <!-- Hero. Drop a real photo at images/hero.jpg and it shows up here. -->
+            <section class="hero" aria-labelledby="hHero">
+                <img src="images/hero.jpg" alt="A fresh Hungry Hippo pizza out of the oven"
+                     onerror="this.parentElement.classList.add('no-photo'); this.remove()">
+                <div class="hero-deco" aria-hidden="true"><span>12″</span> <span>14″</span> <span>18″</span></div>
+                <div class="hero-card">
+                    <span class="kicker-pill">Made from scratch daily</span>
+                    <h2 id="hHero" class="hero-title"><span class="red">Your pizza,</span> your way. From $5.</h2>
+                    <p>Every pie is custom. Our New York style dough and tomato sauce are made fresh in our kitchen every morning.</p>
+                    <button type="button" class="pill pill-red pill-lg" data-view="order" data-scroll="#hStep2">Build your pizza</button>
+                </div>
+            </section>
+
+            <h2 class="section-title">Explore</h2>
+            <div class="card-row">
+                <article class="promo-card">
+                    <div class="promo-photo" data-label="18″">
+                        <img src="images/build.jpg" alt="Toppings being added to a pizza" onerror="this.parentElement.classList.add('no-photo'); this.remove()">
+                    </div>
+                    <div class="promo-body">
+                        <span class="kicker">Every pizza is custom</span>
+                        <h3 class="promo-title">Small, medium, or large</h3>
+                        <p>12″ for $5, 14″ for $7, 18″ for $9. Toppings from $1 each.</p>
+                        <button type="button" class="pill pill-red" data-view="order" data-scroll="#hStep2">Start building</button>
+                    </div>
+                </article>
+                <article class="promo-card">
+                    <div class="promo-photo red" data-label="$5 off">
+                        <img src="images/rewards.jpg" alt="A pizza and drinks on a table" onerror="this.parentElement.classList.add('no-photo'); this.remove()">
+                    </div>
+                    <div class="promo-body">
+                        <span class="kicker">Hungry Hippo Rewards</span>
+                        <h3 class="promo-title">$5 off every 50 points</h3>
+                        <p>Earn 1 point for every dollar you spend. Free to join with your phone number.</p>
+                        <button type="button" class="pill pill-red" data-view="rewards">Join now</button>
+                    </div>
+                </article>
+                <article class="promo-card">
+                    <div class="promo-photo ink" data-label="Table">
+                        <img src="images/dinein.jpg" alt="Our dining room" onerror="this.parentElement.classList.add('no-photo'); this.remove()">
+                    </div>
+                    <div class="promo-body">
+                        <span class="kicker">Pull up a chair</span>
+                        <h3 class="promo-title">Order from your table</h3>
+                        <p>Already seated? Choose Dine in, add your table number, and we bring it out hot.</p>
+                        <button type="button" class="pill pill-red" data-start="dinein">Dine in</button>
+                    </div>
+                </article>
+                <article class="promo-card">
+                    <div class="promo-photo" data-label="8 min">
+                        <img src="images/oven.jpg" alt="Pizzas baking in our oven" onerror="this.parentElement.classList.add('no-photo'); this.remove()">
+                    </div>
+                    <div class="promo-body">
+                        <span class="kicker">Know when it's ready</span>
+                        <h3 class="promo-title">Live order tracker</h3>
+                        <p>Follow your pizza from the make line to the oven to the counter.</p>
+                        <button type="button" class="pill pill-red" data-view="track">Track an order</button>
+                    </div>
+                </article>
+            </div>
+
+            <section class="rewards-band" aria-labelledby="hRewardsBand">
+                <div>
+                    <span class="kicker">Hungry Hippo Rewards</span>
+                    <h2 id="hRewardsBand" class="rewards-headline">Earn $5 off<br>every 50 points</h2>
+                    <p>One point for every dollar, on pickup and dine-in orders. Sign in with your phone number and a 4-digit PIN. No app to download.</p>
+                    <div class="rewards-actions">
+                        <button type="button" class="pill pill-outline" data-view="rewards">Join now</button>
+                        <button type="button" class="pill pill-red" data-view="rewards">Sign in</button>
+                    </div>
+                </div>
+                <div class="rewards-badge" aria-hidden="true">
+                    <span class="big">50</span>
+                    <span class="small">points</span>
+                    <span class="equals">= $5 off</span>
+                </div>
+            </section>
+
+            <h2 class="section-title" id="hMenu" tabindex="-1">Browse the menu</h2>
+            <div class="menu-grid">
+                <button type="button" class="menu-tile" data-pick-size="S">
+                    <span class="tile-big">12″</span><span class="tile-name">Small</span>
+                    <span class="tile-note">$5, toppings $1 each</span><span class="tile-cta">Build a small</span>
+                </button>
+                <button type="button" class="menu-tile" data-pick-size="M">
+                    <span class="tile-big">14″</span><span class="tile-name">Medium</span>
+                    <span class="tile-note">$7, toppings $2 each</span><span class="tile-cta">Build a medium</span>
+                </button>
+                <button type="button" class="menu-tile" data-pick-size="L">
+                    <span class="tile-big">18″</span><span class="tile-name">Large</span>
+                    <span class="tile-note">$9, toppings $3 each</span><span class="tile-cta">Build a large</span>
+                </button>
+                <button type="button" class="menu-tile" data-view="order" data-scroll="#hStep2">
+                    <span class="tile-big">9</span><span class="tile-name">Toppings</span>
+                    <span class="tile-note">Pepperoni, sausage, beef, peppers, jalapeños, pineapple, onion, olives, tomatoes</span><span class="tile-cta">Pick toppings</span>
+                </button>
+                <button type="button" class="menu-tile" data-view="order" data-scroll="#hStep3">
+                    <span class="tile-big">$1+</span><span class="tile-name">Drinks</span>
+                    <span class="tile-note">Iced tea, Dr Q, Coke, Diet Coke</span><span class="tile-cta">Add a drink</span>
+                </button>
+            </div>
+
+            <div class="info-strip">
+                <div class="info-item"><h3>Open every day</h3><p>10 AM to 11 PM, seven days a week.</p></div>
+                <div class="info-item"><h3>Pickup and dine in</h3><p>Order ahead and skip the wait, or eat with us.</p></div>
+                <div class="info-item"><h3>Pay at the counter</h3><p>Cash or card when you pick up. Nothing is charged online.</p></div>
+                <div class="info-item"><h3>Made in house</h3><p>Dough, sauce, and crust made from scratch every day.</p></div>
+            </div>
+        </section>
+
+        <!-- ================= ORDER ================= -->
+        <section id="viewOrder" class="view" aria-labelledby="hOrder" hidden>
+            <h1 id="hOrder" class="section-title">Build your order</h1>
+            <div class="order-layout">
+                <div>
+                    <section class="panel" aria-labelledby="hStep1">
+                        <h2 id="hStep1" tabindex="-1"><span class="step-num" aria-hidden="true">1</span> Pickup or dine in?</h2>
+                        <div class="choice-row" role="radiogroup" aria-labelledby="hStep1">
+                            <label class="choice">
+                                <input type="radio" name="radType" value="pickup" checked>
+                                <span class="choice-body"><span class="choice-title">Pickup</span><span class="choice-note">Get it at the counter</span></span>
+                            </label>
+                            <label class="choice">
+                                <input type="radio" name="radType" value="dinein">
+                                <span class="choice-body"><span class="choice-title">Dine in</span><span class="choice-note">Eat with us</span></span>
+                            </label>
+                        </div>
+                        <div class="field" style="margin-top: 1rem;">
+                            <label for="selWhen">When do you want it?</label>
+                            <select id="selWhen"></select>
+                        </div>
+                        <div class="field" id="divTable" hidden>
+                            <label for="txtTable">Table number <span class="optional">(if you are already seated)</span></label>
+                            <input type="text" id="txtTable" inputmode="numeric" maxlength="3" autocomplete="off">
+                        </div>
+                    </section>
+
+                    <section class="panel" aria-labelledby="hStep2">
+                        <h2 id="hStep2" tabindex="-1"><span class="step-num" aria-hidden="true">2</span> Build your pizza</h2>
+                        <p class="lede">Every pizza starts with our New York style crust, house-made tomato sauce, and mozzarella.</p>
+                        <fieldset>
+                            <legend>Size</legend>
+                            <div class="size-grid" id="divSizes"></div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Toppings <span class="legend-note" id="lblToppingNote"></span></legend>
+                            <div class="chip-grid" id="divToppings"></div>
+                        </fieldset>
+                        <div class="builder-foot">
+                            <div class="qty" role="group" aria-label="Number of pizzas">
+                                <button type="button" id="btnQtyMinus" aria-label="One fewer pizza">&minus;</button>
+                                <output id="outQty" aria-live="polite">1</output>
+                                <button type="button" id="btnQtyPlus" aria-label="One more pizza">+</button>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-lg" id="btnAddPizza">Add pizza</button>
+                        </div>
+                    </section>
+
+                    <section class="panel" aria-labelledby="hStep3">
+                        <h2 id="hStep3" tabindex="-1"><span class="step-num" aria-hidden="true">3</span> Add a drink</h2>
+                        <fieldset>
+                            <legend>Drink</legend>
+                            <div class="choice-row" id="divDrinks" role="radiogroup" aria-label="Drink"></div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Size</legend>
+                            <div class="choice-row three" id="divDrinkSizes" role="radiogroup" aria-label="Drink size"></div>
+                        </fieldset>
+                        <button type="button" class="btn btn-secondary btn-lg btn-block" id="btnAddDrink">Add drink</button>
+                    </section>
+                </div>
+
+                <aside class="panel cart" id="secCart" aria-labelledby="hCart">
+                    <h2 id="hCart" tabindex="-1"><span class="step-num" aria-hidden="true">4</span> Your order</h2>
+                    <div id="divCartItems"></div>
+                    <div id="divRedeem"></div>
+                    <dl class="totals" id="dlTotals"></dl>
+
+                    <div id="divSignedIn"></div>
+                    <div id="divGuest">
+                        <div class="field">
+                            <label for="txtName">Your name</label>
+                            <input type="text" id="txtName" autocomplete="name">
+                        </div>
+                        <div class="field">
+                            <label for="txtPhone">Phone number</label>
+                            <input type="tel" id="txtPhone" autocomplete="tel" placeholder="931-555-0123">
+                            <p class="hint">We only call if there is a problem with your order.</p>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="txtNotes">Notes for the kitchen <span class="optional">(optional)</span></label>
+                        <input type="text" id="txtNotes" maxlength="200" placeholder="Well done, light sauce, cut in squares">
+                    </div>
+
+                    <fieldset>
+                        <legend>Pay at the counter with</legend>
+                        <div class="choice-row">
+                            <label class="choice"><input type="radio" name="radPay" value="Card" checked><span class="choice-body"><span class="choice-title">Card</span></span></label>
+                            <label class="choice"><input type="radio" name="radPay" value="Cash"><span class="choice-body"><span class="choice-title">Cash</span></span></label>
+                        </div>
+                        <p class="hint">Nothing is charged online. You pay when you pick up, or at your table.</p>
+                    </fieldset>
+
+                    <p class="estimate" id="pEstimate" aria-live="polite"></p>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" id="btnPlace">Place order</button>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ================= TRACK ================= -->
+        <section id="viewTrack" class="view" aria-labelledby="hTrack" hidden>
+            <h1 class="section-title" style="text-align:center">Order tracker</h1>
+            <div class="panel narrow">
+                <h2 tabindex="-1" id="hTrack">Your order</h2>
+                <div id="divTrack" aria-live="polite"></div>
+            </div>
+            <div class="panel narrow">
+                <h2>Find an order</h2>
+                <p class="lede">Use the order number from your confirmation and the phone number you ordered with.</p>
+                <div class="field-row two">
+                    <div class="field">
+                        <label for="txtFindNumber">Order number</label>
+                        <input type="text" id="txtFindNumber" inputmode="numeric">
+                    </div>
+                    <div class="field">
+                        <label for="txtFindPhone">Phone number</label>
+                        <input type="tel" id="txtFindPhone" autocomplete="tel">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" id="btnFind">Find order</button>
+            </div>
+        </section>
+
+        <!-- ================= REWARDS ================= -->
+        <section id="viewRewards" class="view" aria-label="Rewards" hidden>
+            <h1 class="section-title" style="text-align:center">Hungry Hippo Rewards</h1>
+            <div class="panel narrow" id="divRewards"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrap footer-grid">
+            <div>
+                <h2 class="footer-logo">Hungry Hippo Pizzas</h2>
+                <p>Custom New York style pizza, made from scratch in Cookeville.</p>
+            </div>
+            <div>
+                <h2>Hours</h2>
+                <p>Every day<br>10 AM to 11 PM</p>
+            </div>
+            <div>
+                <h2>Visit us</h2>
+                <p>[Street address]<br>Cookeville, TN<br>[Phone number]</p>
+            </div>
+            <div>
+                <h2>More</h2>
+                <p><button type="button" class="footer-link" data-view="rewards">Rewards</button><br>
+                   <button type="button" class="footer-link" data-view="track">Order tracker</button><br>
+                   <a href="staff.html">Staff sign in</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cart-bar" id="divCartBar" hidden>
+        <button type="button" class="btn btn-primary btn-lg btn-block" id="btnCartBar"></button>
+    </div>
+
+    <div class="sr-only" aria-live="polite" id="divAnnounce"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/data.js"></script>
+    <script src="js/customer.js"></script>
 </body>
 </html>

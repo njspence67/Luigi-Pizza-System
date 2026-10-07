@@ -38,36 +38,83 @@ function applyTextSize (cls) {
 $$('.ts-btn').forEach(b => b.addEventListener('click', () => applyTextSize(b.dataset.size)))
 applyTextSize(HH.load('text_size', ''))
 
-// ---------- Views ----------
+// ---------- Views: Home, Order, Track, Rewards ----------
+// The view is kept in the address (#order, #track...) so the browser's
+// Back button works the way people expect.
+const VIEWS = ['home', 'order', 'track', 'rewards']
+let currentView = 'home'
+let pendingScroll = null
+
+function viewFromHash () {
+  const v = location.hash.slice(1)
+  return VIEWS.includes(v) ? v : 'home'
+}
 function showView (name, focus = true) {
-  ['order', 'track', 'rewards'].forEach(v => {
-    $('#view' + v[0].toUpperCase() + v.slice(1)).hidden = v !== name
-  })
-  $$('.tab').forEach(t => {
-    if (t.dataset.view === name) t.setAttribute('aria-current', 'page')
-    else t.removeAttribute('aria-current')
+  currentView = name
+  VIEWS.forEach(v => { $('#view' + v[0].toUpperCase() + v.slice(1)).hidden = v !== name })
+  $$('.nav-link').forEach(l => {
+    if (l.dataset.view === name && !l.dataset.scroll) l.setAttribute('aria-current', 'page')
+    else l.removeAttribute('aria-current')
   })
   if (name === 'track') renderTrack()
   if (name === 'rewards') renderRewards()
   renderCartBar()
   if (focus) {
     window.scrollTo(0, 0)
-    const heading = name === 'track' ? $('#hTrack') : null
-    if (heading) heading.focus()
+    $('#main').focus({ preventScroll: true })
   }
 }
-$$('.tab').forEach(t => t.addEventListener('click', () => showView(t.dataset.view)))
+function scrollToTarget (sel) {
+  const el = sel && $(sel)
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  const heading = el.matches('h1, h2, h3') ? el : el.querySelector('h1, h2, h3')
+  if (heading) {
+    if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1')
+    heading.focus({ preventScroll: true })
+  }
+}
+function go (name, scrollTo) {
+  if (location.hash !== '#' + name) {
+    pendingScroll = scrollTo
+    location.hash = name
+  } else {
+    showView(name, !scrollTo)
+    scrollToTarget(scrollTo)
+  }
+}
+window.addEventListener('hashchange', () => {
+  showView(viewFromHash(), !pendingScroll)
+  scrollToTarget(pendingScroll)
+  pendingScroll = null
+})
+
+// One click handler for every "go somewhere" button on the page
+document.addEventListener('click', e => {
+  const start = e.target.closest('[data-start]')
+  if (start) { setType(start.dataset.start); go('order', '#hStep1'); return }
+  const pickSize = e.target.closest('[data-pick-size]')
+  if (pickSize) {
+    state.size = pickSize.dataset.pickSize
+    renderSizes(); renderToppings(); renderBuilderPrice()
+    go('order', '#hStep2')
+    return
+  }
+  const link = e.target.closest('[data-view]')
+  if (link) go(link.dataset.view, link.dataset.scroll)
+})
+$('#btnHeaderCart').addEventListener('click', () => go('order', '#secCart'))
+$('#btnHeaderSignIn').addEventListener('click', () => go('rewards'))
 
 // ---------- Hours ----------
 function renderHours () {
   const open = HH.isOpen()
   const demo = !open && HH.getSettings().alwaysOpen
-  $('#divHours').innerHTML = `<div class="wrap">
+  $('#divHours').innerHTML = `
     <span class="dot ${open ? 'open' : 'closed'}" aria-hidden="true"></span>
-    <span>${open ? 'Open now until 11 PM' : 'Closed now. We open at 10 AM.'}</span>
-    <span class="lede" style="margin:0; font-weight:400">Open 10 AM to 11 PM every day</span>
-    ${demo ? '<span class="tag">Demo mode: taking orders after hours</span>' : ''}
-  </div>`
+    <strong>${open ? 'Open now until 11 PM' : 'Closed now. We open at 10 AM.'}</strong>
+    <span class="util-muted">Pickup and dine in, 10 AM to 11 PM every day</span>
+    ${demo ? '<span class="tag">Demo: taking orders after hours</span>' : ''}`
 }
 
 // ---------- Step 1: pickup or dine in ----------
@@ -91,10 +138,16 @@ function renderWhen () {
   sel.innerHTML = html
   if ([...sel.options].some(o => o.value === keep)) sel.value = keep
 }
-$$('input[name="radType"]').forEach(r => r.addEventListener('change', () => {
+function updateTypeUI () {
   $('#divTable').hidden = getType() !== 'dinein'
   $('label[for="selWhen"]').textContent = getType() === 'dinein' ? 'When will you be here?' : 'When do you want it?'
-}))
+}
+function setType (type) {
+  const radio = document.querySelector(`input[name="radType"][value="${type}"]`)
+  if (radio) radio.checked = true
+  updateTypeUI()
+}
+$$('input[name="radType"]').forEach(r => r.addEventListener('change', updateTypeUI))
 
 // ---------- Step 2: pizza builder ----------
 function renderSizes () {
@@ -258,25 +311,24 @@ $('#divCartItems').addEventListener('click', e => {
 })
 
 function renderCartBar () {
-  const onOrder = !$('#viewOrder').hidden
   const count = state.cart.reduce((n, i) => n + i.qty, 0)
-  $('#divCartBar').hidden = !onOrder || count === 0
+  $('#lblCartCount').textContent = count
+  $('#btnHeaderCart').setAttribute('aria-label', `Your order, ${count} ${count === 1 ? 'item' : 'items'}`)
+  $('#divCartBar').hidden = count === 0 || !['home', 'order'].includes(currentView)
   const t = HH.calcTotals(state.cart, state.redeem)
   $('#btnCartBar').textContent = `Review order (${count} ${count === 1 ? 'item' : 'items'}): ${HH.money(t.total)}`
 }
-$('#btnCartBar').addEventListener('click', () => {
-  $('#secCart').scrollIntoView({ behavior: 'smooth' })
-  $('#hCart').focus({ preventScroll: true })
-})
+$('#btnCartBar').addEventListener('click', () => go('order', '#secCart'))
 
 function renderCustomerBox () {
   const me = HH.currentCustomer()
+  $('#btnHeaderSignIn').textContent = me ? `Hi, ${me.name.split(' ')[0]}` : 'Sign in'
   $('#divGuest').hidden = Boolean(me)
   $('#divSignedIn').innerHTML = me
     ? `<div class="callout"><strong>Ordering as ${HH.escapeHtml(me.name)}</strong><br>${HH.formatPhone(me.phone)}</div>`
     : '<p class="hint" style="margin-bottom:1rem">Have a rewards account? <button type="button" class="btn btn-link btn-small" id="btnGoSignIn">Sign in</button> to earn points.</p>'
-  const go = $('#btnGoSignIn')
-  if (go) go.addEventListener('click', () => showView('rewards'))
+  const btnGo = $('#btnGoSignIn')
+  if (btnGo) btnGo.addEventListener('click', () => go('rewards'))
 }
 
 // ---------- Place order ----------
@@ -339,7 +391,7 @@ $('#btnPlace').addEventListener('click', () => {
       <p>Total: <strong>${HH.money(order.total)}</strong>. Pay at the counter with ${order.payment.toLowerCase()}.</p>
       ${order.customerId ? `<p>You earned <strong>${order.pointsEarned} points</strong>.</p>` : ''}`,
     confirmButtonText: 'Track my order'
-  }).then(() => showView('track'))
+  }).then(() => go('track'))
 })
 
 // ---------- Track ----------
@@ -479,8 +531,7 @@ $('#divRewards').addEventListener('click', e => {
   const order = HH.findOrder(b.dataset.reorder)
   if (!order) return
   order.items.forEach(item => addToCart(HH.repriceItem(item)))
-  showView('order')
-  $('#secCart').scrollIntoView({ behavior: 'smooth' })
+  go('order', '#secCart')
 })
 
 function signIn () {
@@ -543,3 +594,4 @@ renderToppings()
 renderBuilderPrice()
 renderDrinks()
 renderCart()
+showView(viewFromHash(), false)
