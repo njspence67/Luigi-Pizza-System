@@ -6,7 +6,7 @@ A free ordering and shop-management system for Luigi's pizza shop. It has a cust
 
 No install, no accounts, no cost.
 
-1. Download the zip and **unzip it**. Keep the folders together: `index.html` needs the `css`, `js`, and `images` folders next to it, or the page shows up unstyled.
+1. Download the zip and **unzip it**. Keep the files and `vendor/` folder together so each page can load its local styles, scripts, and libraries.
 2. Open `index.html` (customer site) in a browser.
 3. Open `staff.html` (staff site) in a second tab of the **same browser**. The two tabs stay in sync, so an order placed on the customer site shows up on the kitchen screen right away.
 
@@ -29,14 +29,14 @@ The home page has spots for five real photos of Luigi's food and shop. See `imag
 ```
 index.html        Customer site: home, order, tracker, rewards
 staff.html        Staff site: kitchen, time clock, schedule, inventory, recipes, reports
-css/styles.css    Shared look (colors, type, buttons)
-images/           Real photos go here (see images/README.txt)
-js/data.js        Menu, prices, business rules, and storage. Shared by both sites.
-js/customer.js    Customer site logic
-js/staff.js       Staff site logic
+styles.css        Shared look (colors, type, buttons)
+data.js           Menu, prices, business rules, and storage. Shared by both sites.
+customer.js       Customer site logic
+staff.js          Staff site logic
+vendor/           Local Bootstrap, SweetAlert2, and Chart.js files
 ```
 
-**To change prices, toppings, drinks, hours, tax, or oven numbers, edit `CONFIG` at the top of `js/data.js`.** Both sites read from it.
+**To change prices, toppings, drinks, hours, tax, or oven numbers, edit `CONFIG` at the top of `data.js`.** Both sites read from it.
 
 ## What's built, mapped to Luigi's top 7
 
@@ -48,7 +48,7 @@ js/staff.js       Staff site logic
 | 4 | Mobile orders | Customer site is built phone-first, with a sticky "Review order" bar |
 | 5 | Track the order | Completion meter on the customer side, bump screen on the staff side |
 | 6 | Easy for older customers | 18px base text, A/A+/A++ text size buttons, high contrast, large tap targets, labels on every field, screen-reader announcements, no tiny icons |
-| 7 | Reliable | No paid services. Works if the pop-up library fails to load. Orders and the cart survive a page refresh. |
+| 7 | Reliable | No paid services or runtime CDN requests. Works if the pop-up library fails to load. Orders and the cart survive a page refresh. |
 
 Also built: rewards (1 point per $1, 50 points = $5 off), "order this again", pickup times up to tomorrow, dine-in table numbers, bump bar number keys (1 to 9), oven capacity check (12 at a time), time clock, weekly schedule with positions and descriptions, printable recipes and build guide.
 
@@ -56,7 +56,7 @@ Also built: rewards (1 point per $1, 50 points = $5 off), "order this again", pi
 
 - **No delivery.** The notes say dine in and pickup only because of the extra cost, so delivery is not built.
 - **No online payment.** The notes both ask for and rule out online payment. Card processors (Square, Stripe) have no monthly fee but take about 3% of every sale, so the system is free only if customers pay at the counter. **Never collect or store card numbers in this system.** That breaks card-industry security rules (PCI DSS). If Luigi wants online payment later, add Square or Stripe checkout, which handles the card for us.
-- **Recipes and ingredient costs are placeholders.** Replace them with Luigi's real recipes and invoice prices (Recipes tab text is in `js/staff.js`; dough amounts and costs are in `js/data.js`).
+- **Recipes and ingredient costs are placeholders.** Replace them with Luigi's real recipes and invoice prices (Recipes tab text is in `staff.js`; dough amounts and costs are in `data.js`).
 - **Portions:** ¼ cup (small), ½ cup (medium), 1 cup (large) of sauce, cheese, and each topping.
 - **Oven:** every pizza takes one of the 12 spots, whatever the size. Prep time is assumed to be 4 minutes.
 - **"DC" is Diet Coke.** Confirm.
@@ -68,7 +68,7 @@ Also built: rewards (1 point per $1, 50 points = $5 off), "order this again", pi
 Right now everything is saved in one browser (`localStorage`), which is right for a class demo but means a customer's phone and the kitchen tablet can't see each other. To go live:
 
 - **Hosting:** GitHub Pages or Netlify, both free for a site like this.
-- **Shared database and real logins:** Supabase or Firebase. Both have free tiers that cover a shop this size. Only the "Storage" section and the sign-in functions in `js/data.js` need to change.
+- **Shared database and real logins:** Supabase or Firebase. Both have free tiers that cover a shop this size. Only the "Storage" section and the sign-in functions in `data.js` need to change.
 - The PIN check in this demo is **not real security**. Real sign-ins must go through the database provider's login system.
 
 ## Suggested Trello lists and cards

@@ -425,7 +425,7 @@ function renderRecipes () {
   const batch = 20 // large dough balls per batch
   const flour = HH.round2(L.flour * batch)
   $('#divRecipes').innerHTML = `
-    <div class="callout warn no-print"><strong>Placeholder recipes.</strong> These are starting points so the system works. Replace them with Luigi's real recipes in <code>js/staff.js</code>, and update the dough amounts in <code>js/data.js</code> so inventory stays accurate.</div>
+    <div class="callout warn no-print"><strong>Placeholder recipes.</strong> These are starting points so the system works. Replace them with Luigi's real recipes in <code>staff.js</code>, and update the dough amounts in <code>data.js</code> so inventory stays accurate.</div>
     <button type="button" class="btn btn-secondary no-print" onclick="window.print()" style="margin-bottom:1rem">Print recipes</button>
 
     <div class="panel">
@@ -555,10 +555,10 @@ function makeChart (id, config) {
 
 function renderReports () {
   if (typeof Chart === 'undefined') {
-    $('#divKpis').innerHTML = '<div class="callout warn">Charts need an internet connection to load the free Chart.js library.</div>'
+    $('#divKpis').innerHTML = '<div class="callout warn">Charts are unavailable because the local Chart.js file could not be loaded.</div>'
     return
   }
-  Chart.defaults.font.family = "'Atkinson Hyperlegible', Verdana, sans-serif"
+  Chart.defaults.font.family = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
   Chart.defaults.font.size = 14
   Chart.defaults.color = '#1A2129'
   Chart.defaults.maintainAspectRatio = false

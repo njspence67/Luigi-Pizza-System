@@ -21,8 +21,8 @@
   --amber-tint: #FFF0D6;
   --focus: #1457B8;
 
-  --font-display: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
-  --font-body: 'Atkinson Hyperlegible', Verdana, Tahoma, sans-serif;
+  --font-display: 'Arial Narrow', 'Roboto Condensed', Arial, sans-serif;
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --radius-lg: 18px;
   --radius: 12px;
