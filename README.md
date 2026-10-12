@@ -12,7 +12,7 @@ python3 -m http.server 8000
 
 Then open <http://localhost:8000> in a browser. The root page forwards to the provided baseline filename, `index2.html`. Stop the server with `Ctrl+C`.
 
-The Bootstrap stylesheet and SweetAlert2 messages use their public, free jsDelivr CDN URLs. No payment processor, API key, database, or external account is used. The layout and core ordering flow remain usable without SweetAlert2; the browser's built-in alert is used as a fallback.
+Bootstrap, SweetAlert2, and Chart.js are stored in `vendor/` and loaded from this repository. The staff page uses the browser's local system font stack instead of Google Fonts. The site makes no runtime requests to a CDN. No payment processor, API key, database, or external account is used. The layout and core ordering flow remain usable without SweetAlert2; the browser's built-in alert is used as a fallback.
 
 ## What works in this demo
 
@@ -35,5 +35,6 @@ The Bootstrap stylesheet and SweetAlert2 messages use their public, free jsDeliv
 ## Files
 
 - `index2.html` — semantic screens and content, preserving the uploaded baseline filename.
-- `css/styles.css` — responsive layout, high-contrast colors, focus styles, and reduced-motion support.
-- `js/app.js` — local demo data, pricing, cart, checkout, tracker, kitchen controls, and sample charts.
+- `styles.css` — responsive layout, high-contrast colors, focus styles, and reduced-motion support.
+- `app.js` — local demo data, pricing, cart, checkout, tracker, kitchen controls, and sample charts.
+- `vendor/` — local Bootstrap 5.3.8, SweetAlert2 11.26.25, Chart.js 4.4.1, and the matching license notices.

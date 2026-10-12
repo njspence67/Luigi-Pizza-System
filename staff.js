@@ -555,10 +555,10 @@ function makeChart (id, config) {
 
 function renderReports () {
   if (typeof Chart === 'undefined') {
-    $('#divKpis').innerHTML = '<div class="callout warn">Charts need an internet connection to load the free Chart.js library.</div>'
+    $('#divKpis').innerHTML = '<div class="callout warn">Charts are unavailable because the local Chart.js file could not be loaded.</div>'
     return
   }
-  Chart.defaults.font.family = "'Atkinson Hyperlegible', Verdana, sans-serif"
+  Chart.defaults.font.family = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
   Chart.defaults.font.size = 14
   Chart.defaults.color = '#1A2129'
   Chart.defaults.maintainAspectRatio = false
