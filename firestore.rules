@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function staffPath(uid) {
+      return /databases/$(database)/documents/staff/$(uid);
+    }
+
+    function isKitchenStaff() {
+      return signedIn()
+        && exists(staffPath(request.auth.uid))
+        && get(staffPath(request.auth.uid)).data.active == true
+        && get(staffPath(request.auth.uid)).data.role == 'kitchen';
+    }
+
+    function isAnonymousCustomer() {
+      return signedIn()
+        && request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+
+    match /staff/{staffUid} {
+      // Staff can read their own role for UI routing. Only the project owner
+      // should create or change these records in the Firebase console.
+      allow get: if signedIn() && request.auth.uid == staffUid;
+      allow list, create, update, delete: if false;
+    }
+
+    match /orders/{orderId} {
+      // Customers may submit an order but cannot read their own or anyone else's.
+      allow create: if isAnonymousCustomer()
+        && request.resource.data.keys().hasAll([
+          'customerName', 'customerPhone', 'customerEmail', 'fulfillment',
+          'tableNumber', 'items', 'total', 'status', 'createdBy', 'createdAt'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'customerName', 'customerPhone', 'customerEmail', 'fulfillment',
+          'tableNumber', 'items', 'total', 'status', 'createdBy', 'createdAt'
+        ])
+        && request.resource.data.customerName is string
+        && request.resource.data.customerName.size() > 0
+        && request.resource.data.customerName.size() <= 80
+        && request.resource.data.customerPhone is string
+        && request.resource.data.customerPhone.size() > 0
+        && request.resource.data.customerPhone.size() <= 30
+        && request.resource.data.customerEmail is string
+        && request.resource.data.customerEmail.size() <= 254
+        && request.resource.data.fulfillment in ['Dine-in', 'Pickup']
+        && request.resource.data.tableNumber is string
+        && request.resource.data.tableNumber.size() <= 10
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.items.size() <= 20
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0
+        && request.resource.data.total <= 5000
+        && request.resource.data.status == 'Received'
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.createdAt == request.time;
+
+      // The queue is readable and editable only by active kitchen staff.
+      allow get, list: if isKitchenStaff();
+      allow update: if isKitchenStaff()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt'])
+        && request.resource.data.status in ['Received', 'Preparing', 'In Oven', 'Ready', 'Completed']
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+  }
+}

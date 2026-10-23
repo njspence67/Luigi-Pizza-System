@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="styles.css">
   <script defer src="vendor/sweetalert2/sweetalert2.all.min.js"></script>
-  <script defer src="app.js"></script>
+  <script defer src="firebase-config.js"></script>
+  <script defer src="vendor/app.bundle.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to main content</a>
@@ -28,7 +29,7 @@
     <nav class="primary-nav" aria-label="Demo sections">
       <div class="nav-inner">
         <button class="nav-button is-active" type="button" data-view="orderView" aria-current="page">Order</button>
-        <button class="nav-button" type="button" data-view="trackingView">Track order</button>
+        <button class="nav-button" type="button" data-view="trackingView">Order info</button>
         <button class="nav-button" type="button" data-view="kitchenView">Kitchen</button>
         <button class="nav-button" type="button" data-view="managerView">Manager</button>
       </div>
@@ -36,6 +37,7 @@
   </header>
 
   <main id="mainContent" class="page-shell" tabindex="-1">
+    <p id="firebaseNotice" class="firebase-notice" role="status"></p>
     <section id="orderView" class="app-view is-visible" aria-labelledby="orderHeading">
       <div class="page-heading">
         <div>
@@ -140,7 +142,7 @@
             <label class="form-label" for="txtCustomerEmail">Email <span class="muted">Optional</span></label>
             <input class="form-control" id="txtCustomerEmail" name="customerEmail" type="email" autocomplete="email" inputmode="email" aria-describedby="checkoutError">
             <div id="tableNumberWrap" hidden><label class="form-label" for="txtTableNumber">Table number <span class="muted">Optional</span></label><input class="form-control" id="txtTableNumber" name="tableNumber" inputmode="numeric"></div>
-            <p class="privacy-note">Demo contact and order details are saved only in this browser.</p>
+            <p class="privacy-note">Order details are sent to the secured kitchen queue. Customers cannot browse submitted orders.</p>
             <p id="checkoutError" class="form-error" role="alert" hidden></p>
             <div class="checkout-actions"><button id="btnBackToOrder" class="button button-secondary" type="button">Back to order</button><button id="btnPlaceOrder" class="button button-primary" type="submit">Place demo order</button></div>
           </form>
@@ -148,24 +150,37 @@
       </section>
 
       <section class="customer-extras" aria-label="Customer information">
-        <article class="loyalty-card"><div class="loyalty-star" aria-hidden="true">✦</div><div><p class="step-label">LUIGI'S REWARDS · DEMO</p><h2>Good food, good company.</h2><p>Loyalty points and accounts are shown as a preview. This demo does not create accounts or save passwords.</p></div><div class="points-pill"><strong id="loyaltyPoints">0</strong><span>sample points</span></div></article>
-        <section class="history-card" aria-labelledby="historyHeading"><div class="section-title-row"><div><p class="step-label">DEMO HISTORY</p><h2 id="historyHeading">Recent orders</h2></div><span class="tag">SAMPLE DATA</span></div><div id="customerHistory" class="history-list"></div></section>
+        <article class="loyalty-card"><div class="loyalty-star" aria-hidden="true">✦</div><div><p class="step-label">LUIGI'S REWARDS · DEMO</p><h2>Good food, good company.</h2><p>Loyalty accounts are a future feature. This demo does not create customer accounts or save passwords.</p></div></article>
       </section>
     </section>
 
     <section id="trackingView" class="app-view" aria-labelledby="trackingHeading" hidden>
-      <div class="page-heading"><div><p class="eyebrow">YOUR ORDER, AT A GLANCE</p><h1 id="trackingHeading">Order tracker</h1><p class="lead-copy">Follow a sample ticket or the demo order you just placed.</p></div><span class="tag tag-olive">LOCAL DEMO</span></div>
+      <div class="page-heading"><div><p class="eyebrow">ORDER CONFIRMATION</p><h1 id="trackingHeading">Order information</h1><p class="lead-copy">Your reference appears after checkout. Only kitchen staff can view the live order queue.</p></div><span class="tag tag-olive">CUSTOMER VIEW</span></div>
       <section class="panel tracker-panel">
-        <div class="tracker-topline"><div><p class="step-label">SELECT AN ORDER</p><label class="visually-hidden" for="orderSelect">Choose an order to track</label><select id="orderSelect" class="form-select tracker-select"></select></div><span id="trackerStatus" class="status-badge">Received</span></div>
-        <div id="trackerContent" class="tracker-content"></div>
+        <div class="tracker-topline"><div><p class="step-label">PRIVATE ORDER QUEUE</p><strong id="receiptReference">No recent confirmation</strong></div><span class="status-badge">Staff-only status</span></div>
+        <div id="trackerContent" class="tracker-content"><p class="empty-cart">Place an order to see its confirmation reference here. Customer pages cannot read order records or status.</p></div>
       </section>
-      <p class="privacy-note">Sample and demo orders are saved only in this browser. No account or server is connected.</p>
+      <p class="privacy-note">Order records are stored in Firebase. Firestore security rules allow reads only to active kitchen staff accounts.</p>
     </section>
 
     <section id="kitchenView" class="app-view" aria-labelledby="kitchenHeading" hidden>
-      <div class="page-heading"><div><p class="eyebrow">STAFF VIEW · DEMO TICKETS</p><h1 id="kitchenHeading">Kitchen queue</h1><p class="lead-copy">Advance tickets through the sample prep flow.</p></div><div class="queue-count"><strong id="queueCount">0</strong><span>active tickets</span></div></div>
-      <div class="kitchen-toolbar"><span class="tag tag-red">BUMP BAR PREVIEW</span><span class="fine-print">Changes stay in this browser.</span></div>
-      <div id="kitchenQueue" class="kitchen-grid"></div>
+      <div class="page-heading"><div><p class="eyebrow">STAFF VIEW · FIREBASE TICKETS</p><h1 id="kitchenHeading">Kitchen queue</h1><p class="lead-copy">Sign in with a staff account to view and update orders.</p></div><div class="queue-count"><strong id="queueCount">0</strong><span>active tickets</span></div></div>
+      <section id="staffLoginPanel" class="panel staff-login-panel" aria-labelledby="staffLoginHeading">
+        <p class="step-label">AUTHORIZED STAFF</p><h2 id="staffLoginHeading">Kitchen sign in</h2>
+        <p class="helper-copy">Use an email and password created by the Firebase project owner. Customer accounts cannot open this queue.</p>
+        <form id="staffLoginForm" class="staff-login-form">
+          <label class="form-label" for="staffEmail">Staff email</label><input class="form-control" id="staffEmail" name="email" type="email" autocomplete="username" required>
+          <label class="form-label" for="staffPassword">Password</label><input class="form-control" id="staffPassword" name="password" type="password" autocomplete="current-password" required>
+          <p id="staffLoginError" class="form-error" role="alert" hidden></p>
+          <button id="btnStaffLogin" class="button button-primary" type="submit">Sign in</button>
+        </form>
+      </section>
+      <div id="staffWorkspace" hidden>
+        <div class="kitchen-toolbar"><span class="tag tag-red">LIVE KITCHEN QUEUE</span><div class="staff-session"><span id="staffIdentity"></span><button id="btnStaffSignOut" class="button button-secondary" type="button">Sign out</button></div></div>
+        <p id="notKitchenStaff" class="privacy-note" hidden>This account has manager access, but the order queue is restricted to kitchen staff.</p>
+        <p id="kitchenQueueError" class="form-error" role="alert" hidden></p>
+        <div id="kitchenQueue" class="kitchen-grid" hidden></div>
+      </div>
     </section>
 
     <section id="managerView" class="app-view" aria-labelledby="managerHeading" hidden>
